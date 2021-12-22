@@ -3,8 +3,26 @@
 <%= render @list %>
 
 <div>
-  <%= link_to "Edit this list", edit_list_path(@list) %> |
   <%= link_to "Back to lists", lists_path %>
 
-  <%= button_to "Destroy this list", @list, method: :delete %>
+  <% if current_user&.author_of?(@list) %>
+    <%= link_to "Edit this list", edit_list_path(@list) %> |
+    <%= button_to "Destroy this list", @list, method: :delete %>
+  <% end %>
+</div>
+
+<div class="wishes">
+  <h3>My wishes:</h3>
+  <% @list.wishes.each do |wish| %>
+    <p><%= wish.title %></p>
+    <p><%= wish.description %></p>
+    <% if current_user&.author_of?(@list) %>
+      <p><%= button_to 'Delete', wish, method: :delete %></p>
+    <% end %>
+  <% end %>
+
+  <% if current_user&.author_of?(@list) %>
+    <h3>Add new wish:</h3>
+    <%= render 'wishes/form' %>
+  <% end %>
 </div>
